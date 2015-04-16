@@ -260,12 +260,3 @@ CREATE TABLE IF NOT EXISTS `PREFIXwordfilters` (
   PRIMARY KEY (`id`)
 ) ENGINE=MyISAM  DEFAULT CHARSET=latin1;
 
---
--- Dumping data for table `filetypes`
---
-
-INSERT INTO `PREFIXfiletypes` (`id`, `name`, `image`) VALUES
-(1, 'jpg', '');
-(2, 'png', ''),
-(3, 'gif', ''),
-
