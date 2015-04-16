@@ -51,6 +51,9 @@
 		$db->Execute('INSERT INTO `'.prefix.'staff` (`username`, `password`, `level`, `boards`) VALUES ('.$db->quote($_POST['username']).', '.$db->quote($pass).', "admin", "all")');
 		$db->Execute('INSERT INTO `'.prefix.'siteconfig` (`config_value`, `config_name`) VALUES ('.$db->quote(time()).', "installtime")');
 		$db->Execute('INSERT INTO `'.prefix.'siteconfig` (`config_value`, `config_name`) VALUES ("2.0", "version")');
+		$db->Execute('INSERT INTO `'.prefix.'filetypes` (`id`, `name`) VALUES (1, "jpg")');
+		$db->Execute('INSERT INTO `'.prefix.'filetypes` (`id`, `name`) VALUES (2, "png")');
+		$db->Execute('INSERT INTO `'.prefix.'filetypes` (`id`, `name`) VALUES (3, "gif")');
 		fopen(fullpath.'.installed', 'w');
 		$twig_data['success'] = 2;
 	}

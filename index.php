@@ -4,7 +4,7 @@
 	require './modules/anonsaba.php';
 	//Is Anonsaba even installed?
 	if (!file_exists(fullpath.'.installed')) {
-		die('It appears you haven\'t installed Anonsaba 2.0 please click <a href="/install.php">here</a> to install!');
+		die('It appears you haven\'t installed Anonsaba 2.0 please click <a href="/install/install.php">here</a> to install!');
 	}
 	$twig_data['sitename'] = AnonsabaCore::GetConfigOption('sitename');
 	$twig_data['slogan'] = AnonsabaCore::GetConfigOption('slogan');
