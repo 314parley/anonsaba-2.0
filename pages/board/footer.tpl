@@ -4,6 +4,7 @@
 	<tr>
 	<td>
 	Delete post
+	[<input type="checkbox" name="fileonly" id="fileonly" value="on" /><label for="fileonly">File Only</label>]
 	<br />Password
 	<input type="password" name="postpassword" size="8" />&nbsp;<input name="delpost" value="Delete" type="submit" />
 
