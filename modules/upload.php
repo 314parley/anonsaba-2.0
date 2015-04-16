@@ -54,7 +54,7 @@ class Upload {
 					foreach ($allowed as $allow) {
 						$allowedfiles = $db->GetAll('SELECT `name` FROM `'.prefix.'filetypes` WHERE `id` = '.$allow['fileid']);
 						foreach ($allowedfiles as $af) {
-							if (!in_array($this->files[$i]['file_type'], '.'.$af['name'])) {
+							if ($this->files[$i]['file_type'] != '.'.$af['name']) {
 								AnonsabaCore::Error('Sorry, that filetype is not allowed on this board.');
 							}
 						}
