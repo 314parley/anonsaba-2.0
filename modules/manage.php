@@ -627,6 +627,7 @@ if ($_POST['subject'] != '') {
 		global $db;
 		$db->Execute('DELETE FROM `'.prefix.'posts` WHERE `id` = '.$_GET['id'].' AND `boardname` = '.$db->quote($_GET['boardname']));
 		$db->Execute('DELETE FROM `'.prefix.'posts` WHERE `parent` = '.$_GET['id'].' AND `boardname` = '.$db->quote($_GET['boardname']));
+		$db->Execute('DELETE FROM `'.prefix.'files` WHERE `id` = '.$_GET['id'].' AND `board` = .'.$db->quote($_GET['boardname']));
 		$board_core = new BoardCore();
 		$board_core->Board($_GET['boardname']);
 		$board_core->RefreshAll();
