@@ -191,7 +191,7 @@ class BoardCore {
 	}
 	public function BuildPosts($post, $page) {
 		global $CURRENTLOCALE, $db;
-		//$post['message'] = stripslashes(self::formatLongMessage($post['message'], $this->board['name'], (($post['parent'] == 0) ? ($post['id']) : ($post['parent'])), $page));
+		$post['reflink'] = AnonsabaCore::formatReflink($this->board['name'], (($post['parent'] == 0) ? ($post['id']) : ($post['parent'])), $post['id']);
 		return $post;
 	}
 	public function PageHeader($replythread = '0', $liststart = '0', $liststooutput = '-1') {

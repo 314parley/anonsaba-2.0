@@ -83,6 +83,108 @@ var utf8 = {
 	}
 
 }
+function checkhighlight() {
+	var match;
+
+	if(match=/#i([0-9]+)/.exec(document.location.toString()))
+	if(!document.forms.postform.message.value)
+	insert(">>" + match[1] + "\n");
+
+	if(match=/#([0-9]+)/.exec(document.location.toString()))
+	highlight(match[1]);
+}
+
+function highlight(post, checknopage) {
+
+	if ((checknopage && ispage) || ispage) {
+		// Uncomment the following line to always send the user to the thread if the link was clicked on the board page.
+		//return;
+	}
+
+	var cells = document.getElementsByTagName("td");
+	for(var i=0;i<cells.length;i++) if(cells[i].className == "highlight") cells[i].className = "reply";
+
+	var reply = document.getElementById("reply" + post);
+	var replytable = reply.parentNode;
+	while (replytable.nodeName != 'TABLE') {
+		replytable = replytable.parentNode;
+	}
+
+	if((reply || document.postform.replythread.value == post) && replytable.parentNode.className != "reflinkpreview") {
+		if(reply) {
+			reply.className = "highlight";
+		}
+		var match = /^([^#]*)/.exec(document.location.toString());
+		document.location = match[1] + "#" + post;
+		return false;
+	}
+	
+	return true;
+}
+function addreflinkpreview(e) {
+	var e_out;
+	var ie_var = "srcElement";
+	var moz_var = "href";
+	this[moz_var] ? e_out = this : e_out = e[ie_var];
+	ainfo = e_out.className.split('|');
+	
+	var previewdiv = document.createElement('div');
+	
+	previewdiv.setAttribute("id", "preview" + e_out.className);
+	previewdiv.setAttribute('class', 'reflinkpreview');
+	previewdiv.setAttribute('className', 'reflinkpreview');
+	if (e.pageX) {
+		previewdiv.style.left = '' + (e.pageX + 50) + 'px';
+	} else {
+		previewdiv.style.left = (e.clientX + 50);
+	}
+	var previewdiv_content = document.createTextNode('');
+	previewdiv.appendChild(previewdiv_content);
+	var parentelement = e_out.parentNode;
+	var newelement = parentelement.insertBefore(previewdiv, e_out);
+	new Ajax.Request(ku_boardspath + '/read.php?b=' + ainfo[1] + '&t=' + ainfo[2] + '&p=' + ainfo[3] + '&single',
+	{
+		method:'get',
+		onSuccess: function(transport){
+			var response = transport.responseText || _("something went wrong (blank response)");
+			newelement.innerHTML = response;
+		},
+		onFailure: function(){ alert('wut'); }
+	});
+}
+
+function delreflinkpreview(e) {
+	var e_out;
+	var ie_var = "srcElement";
+	var moz_var = "href";
+	this[moz_var] ? e_out = this : e_out = e[ie_var];
+
+	var previewelement = document.getElementById("preview" + e_out.className);
+	if (previewelement) {
+		previewelement.parentNode.removeChild(previewelement);
+	}
+}
+
+function addpreviewevents() {
+	var aelements = document.getElementsByTagName('a');
+	var aelement;
+	var ainfo;
+	for(var i=0;i<aelements.length;i++){
+		aelement = aelements[i];
+		if (aelement.className) {
+			if (aelement.className.substr(0, 4) == "ref|") {
+				if (aelement.addEventListener){
+					aelement.addEventListener("mouseover", addreflinkpreview, false);
+					aelement.addEventListener("mouseout", delreflinkpreview, false);
+				}
+				else if (aelement.attachEvent){
+					aelement.attachEvent("onmouseover", addreflinkpreview);
+					aelement.attachEvent("onmouseout", delreflinkpreview);
+				}
+			}
+		}
+	}
+}
 function get_password(name) {
 	var pass = getCookie(name);
 	if(pass) return pass;
@@ -213,7 +315,7 @@ function addreflinkpreview(e) {
 	previewdiv.appendChild(previewdiv_content);
 	var parentelement = e_out.parentNode;
 	var newelement = parentelement.insertBefore(previewdiv, e_out);
-	new Ajax.Request(ku_boardspath + '/read.php?b=' + ainfo[1] + '&t=' + ainfo[2] + '&p=' + ainfo[3] + '&single',
+	new Ajax.Request('/read.php?b=' + ainfo[1] + '&t=' + ainfo[2] + '&p=' + ainfo[3] + '&single',
 	{
 		method:'get',
 		onSuccess: function(transport){
@@ -256,70 +358,6 @@ function addpreviewevents() {
 		}
 	}
 }
-function keypress(e) {
-	if (!e) e=window.event;
-	if (e.altKey) {
-		var docloc = document.location.toString();
-		if ((docloc.indexOf('catalog.html') == -1 && docloc.indexOf('/res/') == -1) || (docloc.indexOf('catalog.html') == -1 && e.keyCode == 80)) {
-			if (e.keyCode != 18 && e.keyCode != 16) {
-				if (docloc.indexOf('.html') == -1 || docloc.indexOf('board.html') != -1) {
-					var page = 0;
-					var docloc_trimmed = docloc.substr(0, docloc.lastIndexOf('/') + 1);
-				} else {
-					var page = docloc.substr((docloc.lastIndexOf('/') + 1));
-					page = (+page.substr(0, page.indexOf('.html')));
-					var docloc_trimmed = docloc.substr(0, docloc.lastIndexOf('/') + 1);
-				}
-				if (page == 0) {
-					var docloc_valid = docloc_trimmed;
-				} else {
-					var docloc_valid  = docloc_trimmed + page + '.html';
-				}
-				
-				if (e.keyCode == 222 || e.keyCode == 221) {
-					if(match=/#s([0-9])/.exec(docloc)) {
-						var relativepost = (+match[1]);
-					} else {
-						var relativepost = -1;
-					}
-					
-					if (e.keyCode == 222) {
-						if (relativepost == -1 || relativepost == 9) {
-							var newrelativepost = 0;
-						} else {
-							var newrelativepost = relativepost + 1;
-						}
-					} else if (e.keyCode == 221) {
-						if (relativepost == -1 || relativepost == 0) {
-							var newrelativepost = 9;
-						} else {
-							var newrelativepost = relativepost - 1;
-						}
-					}
-					
-					document.location.href = docloc_valid + '#s' + newrelativepost;
-				} else if (e.keyCode == 59 || e.keyCode == 219) {
-					if (e.keyCode == 59) {
-						page = page + 1;
-					} else if (e.keyCode == 219) {
-						if (page >= 1) {
-							page = page - 1;
-						}
-					}
-					
-					if (page == 0) {
-						document.location.href = docloc_trimmed;
-					} else {
-						document.location.href = docloc_trimmed + page + '.html';
-					}
-				} else if (e.keyCode == 80) {
-					document.location.href = docloc_valid + '#postbox';
-				}
-			}
-		}
-	}
-}
-
 window.onload=function() {
     if (getCookie("mod") == "allboards") {
 		mod_set = true;

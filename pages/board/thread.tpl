@@ -5,10 +5,10 @@
 			<div id="thread{{post.id}}{{board.name}}">
 	    			{% for file in files %}
 					{% if file.id == post.id %}
-						File: <a href="{{url}}{{board.name}}/src/{{file.file}}{{file.type}}">{{file.file}}</a> - ({{ '%.0f' | format(file.size/1024) }} KB, {{file.original}}{{file.type}})<br />
-						<div style="float:left">
-							<img src="{{url}}{{board.name}}/src/{{file.file}}{{file.type}}" height="250" width="250">
-						</div>
+						File: <a href="{{url}}{{board.name}}/src/{{file.file}}{{file.type}}" target="_blank">{{file.file}}</a> - ({{ '%.0f' | format(file.size/1024) }} KB, {{file.original}}{{file.type}})<br />
+ 							<span id="thumb{{post.id}}">
+								<img src="{{url}}{{board.name}}/thumb/{{file.file}}s{{file.type}}">
+							</span>
 					{% endif %}
 				{% endfor %}
 				<a name="{{post.id}}"></a>
@@ -39,14 +39,33 @@
 							<span class="postertrip">!{{post.tripcode}}</span>
 						{% endif %}
 					{% endspaceless %}
+					{% if post.level == 1 %}
+						<span class="admin">
+							&#35;&#35;&nbsp;Admin&nbsp;&#35;&#35;
+						</span>
+					{% elseif post.level == 2 %}
+						<span class="supermod">
+							&#35;&#35;&nbsp;Super Moderator&nbsp;&#35;&#35;
+						</span>
+					{% elseif post.level == 3 %}
+						<span class="mod">
+							&#35;&#35;&nbsp;Moderator&nbsp;&#35;&#35;
+						</span>
+					{% elseif post.level == 4 %}
+						<span class="vip">
+							&#35;&#35;&nbsp;VIP&nbsp;&#35;&#35;
+						</span>
+					{% endif %}
 					{{post.time|date('m/d/y @ h:i:s A')}}
-					No. {{post.id}}
+					<span class="reflink">
+						{{post.reflink|raw}}
+					</span>
 				</label>
 				{% if board.showid %}
 					ID: {{post.ipid|slice(0, 6)}}
 				{% endif %}
 				<span id="dnb-{{board.name}}-{{post.id}}"></span>
-				<blockquote>&nbsp;&nbsp;
+				<blockquote>
 					{% if post.rw == 1 %}
 						{{post.message|raw}}
 					{% else %}
@@ -93,8 +112,27 @@
 										<span class="postertrip">!{{post.tripcode}}</span>
 									{% endif %}
 								{% endspaceless %}
+								{% if post.level == 1 %}
+									<span class="admin">
+										&#35;&#35;&nbsp;Admin&nbsp;&#35;&#35;
+									</span>
+								{% elseif post.level == 2 %}
+									<span class="supermod">
+										&#35;&#35;&nbsp;Super Moderator&nbsp;&#35;&#35;
+									</span>
+								{% elseif post.level == 3 %}
+									<span class="mod">
+										&#35;&#35;&nbsp;Moderator&nbsp;&#35;&#35;
+									</span>
+								{% elseif post.level == 4 %}
+									<span class="vip">
+										&#35;&#35;&nbsp;VIP&nbsp;&#35;&#35;
+									</span>
+								{% endif %}
 								{{post.time|date('m/d/y @ h:i:s A')}}
-								No. {{post.id}}
+								<span class="reflink">
+									{{post.reflink|raw}}
+								</span>
 							</label>
 							{% if board.showid %}
 								ID: {{post.ipid|slice(0, 6)}}
@@ -102,7 +140,9 @@
 							{% for file in files %}
 								{% if file.id == post.id %}
 									<br />&nbsp;&nbsp;&nbsp;&nbsp;File: <a href="{{url}}{{board.name}}/src/{{file.file}}{{file.type}}">{{file.file}}</a> - ({{ '%.0f' | format(file.size/1024) }} KB, {{file.original}}{{file.type}})<br />
-									<img src="{{url}}{{board.name}}/src/{{file.file}}{{file.type}}" height="150" width="150">
+ 									<span id="thumb{{post.id}}">
+										<img src="{{url}}{{board.name}}/thumb/{{file.file}}s{{file.type}}">
+									</span>
 								{% endif %}
 							{% endfor %}
 							<span id="dnb-{{board.name}}-{{post.id}}"></span>

@@ -8,7 +8,7 @@
 					{% if file.id == post.id %}
 						File: <a href="{{url}}{{board.name}}/src/{{file.file}}{{file.type}}">{{file.file}}</a> - ({{ '%.0f' | format(file.size/1024) }} KB, {{file.original}}{{file.type}})<br />
 						<span class="thumb">
-						<img src="{{url}}{{board.name}}/src/{{file.file}}{{file.type}}" height="{{timgh}}" width="{{timgw}}">
+						<img src="{{url}}{{board.name}}/thumb/{{file.file}}s{{file.type}}">
 						</span>
 					{% endif %}
 				{% endfor %}
@@ -40,14 +40,9 @@
 							<span class="postertrip">!{{post.tripcode}}</span>
 						{% endif %}
 					{% endspaceless %}
-					{% if post.level == 1 and post.name != "grumpy !!RXwiWeG3aE" == 1 %}
+					{% if post.level == 1 %}
 						<span class="admin">
 							&#35;&#35;&nbsp;Admin&nbsp;&#35;&#35;
-						</span>
-					{% endif %}
-					{% if post.level == 1 and post.name == "grumpy !!RXwiWeG3aE" %}
-						<span class="dev">
-							&#35;&#35;&nbsp;Developer&nbsp;&#35;&#35;
 						</span>
 					{% elseif post.level == 2 %}
 						<span class="supermod">
@@ -63,7 +58,9 @@
 						</span>
 					{% endif %}
 					{{post.time|date('m/d/y @ h:i:s A')}}
-					No. {{post.id}}
+					<span class="reflink">
+						{{post.reflink|raw}}
+					</span>
 					{% if post.sticky == 1 %}
 						<img style="border: 0;" src="{{url}}pages/css/sticky.gif" alt="Stickied" />
 					{% endif %}
@@ -143,14 +140,9 @@
 										<span class="postertrip">!{{post.tripcode}}</span>
 									{% endif %}
 								{% endspaceless %}
-								{% if post.level == 1 and post.name != "grumpy !!RXwiWeG3aE" == 1 %}
+								{% if post.level == 1 %}
 									<span class="admin">
 										&#35;&#35;&nbsp;Admin&nbsp;&#35;&#35;
-									</span>
-								{% endif %}
-								{% if post.level == 1 and post.name == "grumpy !!RXwiWeG3aE" %}
-									<span class="dev">
-										&#35;&#35;&nbsp;Developer&nbsp;&#35;&#35;
 									</span>
 								{% elseif post.level == 2 %}
 									<span class="supermod">
@@ -166,7 +158,9 @@
 									</span>
 								{% endif %}
 								{{post.time|date('m/d/y @ h:i:s A')}}
-								No. {{post.id}}
+								<span class="reflink">
+									{{post.reflink|raw}}
+								</span>
 							</label>
 							{% if board.showid %}
 								ID: {{post.ipid|slice(0, 6)}}
@@ -176,7 +170,7 @@
 								{% if file.id == post.id %}
 									<br />File: <a href="{{url}}{{board.name}}/src/{{file.file}}{{file.type}}">{{file.file}}</a> - ({{ '%.0f' | format(file.size/1024) }} KB, {{file.original}}{{file.type}})<br />
 										<span id="post_thumb{{post.id}}">
-												<img src="{{url}}{{board.name}}/src/{{file.file}}{{file.type}}" height="{{rimgh}}" width="{{rimgw}}">
+												<img src="{{url}}{{board.name}}/thumb/{{file.file}}s{{file.type}}">
 										</span>
 								{% endif %}
 							{% endfor %}

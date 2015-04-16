@@ -104,5 +104,58 @@ class AnonsabaCore {
 		}
 		self::Output('/banned.tpl', $twig_data);
 		die();
-	}	
+	}
+	public static function formatReflink($post_board, $post_thread_start_id, $post_id) {
+		$return = '	';
+		$reflink_noquote = '<a href="' . url . $post_board . '/res/' . $post_thread_start_id . '.html#' . $post_id . '" onclick="return highlight(\'' . $post_id . '\');">';
+		$reflink_quote = '<a href="' . url . $post_board . '/res/' . $post_thread_start_id . '.html#i' . $post_id . '" onclick="return insert(\'>>' . $post_id . '\\n\');">';
+		$return .= $reflink_noquote . 'No.&nbsp;' . '</a>' . $reflink_quote . $post_id . '</a>';
+		return $return . "\n";
+	}
+	public static function createThumbnail($name, $filename, $new_w, $new_h) {
+		$system=explode(".", $filename);
+		$system = array_reverse($system);
+		if (preg_match("/jpg|jpeg/", $system[0])) {
+			$src_img=imagecreatefromjpeg($name);
+		} else if (preg_match("/png/", $system[0])) {
+			$src_img=imagecreatefrompng($name);
+		} else if (preg_match("/gif/", $system[0])) {
+			$src_img=imagecreatefromgif($name);
+		} else {
+			return false;
+		}
+		if (!$src_img) {
+			self::Error('Unable to read uploaded file during thumbnailing.', 'A common cause for this is an incorrect extension when the file is actually of a different type.');
+		}
+		$old_x = imageSX($src_img);
+		$old_y = imageSY($src_img);
+		if ($old_x > $old_y) {
+			$percent = $new_w / $old_x;
+		} else {
+			$percent = $new_h / $old_y;
+		}
+		$thumb_w = round($old_x * $percent);
+		$thumb_h = round($old_y * $percent);
+		$dst_img = ImageCreateTrueColor($thumb_w, $thumb_h);
+		fastImageCopyResampled($dst_img, $src_img, 0, 0, 0, 0, $thumb_w, $thumb_h, $old_x, $old_y, $system);
+		if (preg_match("/png/", $system[0])) {
+			if (!imagepng($dst_img,$filename,0,PNG_ALL_FILTERS) ) {
+				echo 'unable to imagepng.';
+				return false;
+			}
+		} else if (preg_match("/jpg|jpeg/", $system[0])) {
+			if (!imagejpeg($dst_img, $filename, 70)) {
+				echo 'unable to imagejpg.';
+				return false;
+			}
+		} else if (preg_match("/gif/", $system[0])) {
+			if (!imagegif($dst_img, $filename)) {
+				echo 'unable to imagegif.';
+				return false;
+			}
+		}
+		imagedestroy($dst_img);
+		imagedestroy($src_img);
+		return true;
+	}
 }

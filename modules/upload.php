@@ -54,8 +54,7 @@ class Upload {
 					foreach ($allowed as $allow) {
 						$allowedfiles = $db->GetAll('SELECT `name` FROM `'.prefix.'filetypes` WHERE `id` = '.$allow['fileid']);
 						foreach ($allowedfiles as $af) {
-							$af1 = '.'.$af['name'];
-							if ($this->files[$i]['file_type'] != $af1) {
+							if (!in_array($this->files[$i]['file_type'], '.'.$af['name'])) {
 								AnonsabaCore::Error('Sorry, that filetype is not allowed on this board.');
 							}
 						}
@@ -99,6 +98,21 @@ class Upload {
 						AnonsabaCore::Error('Could not copy uploaded image(s).');
 					}
 					chmod($this->file_location[$i], 0755);
+					if ((!$this->isreply && ($this->files[$i]['imgWidth'] > AnonsabaCore::GetConfigOption('timgw') || $this->files[$i]['imgHeight'] > AnonsabaCore::GetConfigOption('timgh'))) || ($this->isreply && ($this->files[$i]['imgWidth'] > AnonsabaCore::GetConfigOption('rimgw') || $this->files[$i]['imgHeight'] > AnonsabaCore::GetConfigOption('rimgh')))) {
+						if (!$this->isreply) {
+							if (!AnonsabaCore::createThumbnail($this->file_location[$i], $this->file_thumb_location[$i], AnonsabaCore::GetConfigOption('timgw'), AnonsabaCore::GetConfigOption('timgh'))) {
+								AnonsabaCore::Error('Could not create thumbnail(s). here');
+							}
+						} else {
+							if (!AnonsabaCore::createThumbnail($this->file_location[$i], $this->file_thumb_location[$i], AnonsabaCore::GetConfigOption('rimgw'), AnonsabaCore::GetConfigOption('rimgh'))) {
+								AnonsabaCore::Error('Could not create thumbnail(s).');
+							}
+						}
+					} else {
+						if (!AnonsabaCore::createThumbnail($this->file_location[$i], $this->file_thumb_location[$i], $this->files[$i]['imgWidth'], $this->files[$i]['imgHeight'])) {
+							AnonsabaCore::Error('Could not create thumbnail(s).');
+						}
+					}
 					$this->files[$i]['file_name'] = htmlspecialchars_decode($this->files[$i]['file_name'], ENT_QUOTES);
 					$this->files[$i]['file_name'] = stripslashes($this->files[$i]['file_name']);
 					$this->files[$i]['file_name'] = str_replace("\x80", " ", $this->files[$i]['file_name']);					

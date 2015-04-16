@@ -406,7 +406,7 @@ if ($_POST['subject'] != '') {
 		global $db, $twig_data;
 		$boardexist = $db->GetOne('SELECT COUNT(*) FROM `'.prefix.'boards` WHERE `name` = '.$db->quote($val));
 		if ($boardexist == 0) {
-			if (mkdir(fullpath.$val, $mode = 0755) && mkdir(fullpath.$val.'/src', $mode = 0755) && mkdir(fullpath.$val.'/res', $mode = 0755)) {
+			if (mkdir(fullpath.$val, $mode = 0755) && mkdir(fullpath.$val.'/src', $mode = 0755) && mkdir(fullpath.$val.'/res', $mode = 0755) && mkdir(fullpath.$val.'/thumb', $mode = 0755)) {
 				$db->Execute('INSERT INTO `'.prefix.'boards` (`name`, `desc`) VALUES ('.$db->quote($val).', '.$db->quote($val2).')');
 				$boardid = $db->lastInsertId();
 				file_put_contents(fullpath. $val .'/.htaccess' , 'DirectoryIndex board.html');
