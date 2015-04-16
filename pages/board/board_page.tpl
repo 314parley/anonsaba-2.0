@@ -5,11 +5,15 @@
 		{% if post.parent == 0 %}
 			<div id="thread{{post.id}}{{board.name}}">
 				{% for file in files %}
-					{% if file.id == post.id %}
+					{% if file.id == post.id and file.rm == 0 %}
 						File: <a href="{{url}}{{board.name}}/src/{{file.file}}{{file.type}}">{{file.file}}</a> - ({{ '%.0f' | format(file.size/1024) }} KB, {{file.original}}{{file.type}})<br />
 						<span class="thumb">
 						<img src="{{url}}{{board.name}}/thumb/{{file.file}}s{{file.type}}">
 						</span>
+					{% elseif file.id == post.id and file.rm == 1 %}
+						<div class="nothumb">
+							File<br />Removed
+						</div>
 					{% endif %}
 				{% endfor %}
 				<a name="{{post.id}}"></a>
@@ -167,11 +171,15 @@
 							{% endif %}
 							<span id="dnb-{{board.name}}-{{post.id}}"></span>
 							{% for file in files %}
-								{% if file.id == post.id %}
+								{% if file.id == post.id and file.rm == 0 %}
 									<br />File: <a href="{{url}}{{board.name}}/src/{{file.file}}{{file.type}}">{{file.file}}</a> - ({{ '%.0f' | format(file.size/1024) }} KB, {{file.original}}{{file.type}})<br />
 										<span id="post_thumb{{post.id}}">
 												<img src="{{url}}{{board.name}}/thumb/{{file.file}}s{{file.type}}">
 										</span>
+								{% elseif file.id == post.id and file.rm == 1 %}
+									<div class="nothumb">
+										File<br />Removed
+									</div>
 								{% endif %}
 							{% endfor %}
 							<blockquote>
