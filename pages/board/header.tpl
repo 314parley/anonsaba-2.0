@@ -17,7 +17,7 @@
 	{% for sect in boards %}
 		[
 	{% for brd in sect %}
-		<a title="{{brd.desc}}" href="{{url}}{{brd.name}}/">{{brd.desc}}</a>{% if loop.last %}{% else %} / {% endif %}
+		<a title="{{brd.desc}}" href="{{url}}{{brd.name}}/">{{brd.name}}</a>{% if loop.last %}{% else %} / {% endif %}
 	{% endfor %}
 		 ]
 	{% endfor %}
