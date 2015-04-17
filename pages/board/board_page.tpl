@@ -1,14 +1,14 @@
 <form id="delform" action="{{url}}post.php" method="post">
 <input type="hidden" name="board" value="{{board.name}}" />
 {% for postsa in posts %}
-	    {% for postkey, post in postsa %}
+		{% for postkey, post in postsa %}
 		{% if post.parent == 0 %}
 			<div id="thread{{post.id}}{{board.name}}">
 				{% for file in files %}
 					{% if file.id == post.id and file.rm == 0 %}
 						File: <a href="{{url}}{{board.name}}/src/{{file.file}}{{file.type}}">{{file.file}}</a> - ({{ '%.0f' | format(file.size/1024) }} KB, {{file.original}}{{file.type}})<br />
 						<span class="thumb">
-						<img src="{{url}}{{board.name}}/thumb/{{file.file}}s{{file.type}}">
+						<a href="{{url}}{{board.name}}/src/{{file.file}}{{file.type}}"><img src="{{url}}{{board.name}}/thumb/{{file.file}}s{{file.type}}"></a>
 						</span>
 					{% elseif file.id == post.id and file.rm == 1 %}
 						<div class="nothumb">
@@ -90,7 +90,7 @@
 				</blockquote>
 				<span class="omittedposts">
 					{% if post.sticky == 1 and post.replies > 1 %}
-							{{post.replies - 1}} 
+							{{post.replies - 1}}
 						{% if post.replies ==  2 %}
 							Post
 						{% elseif post.replies > 2 %}
@@ -174,7 +174,7 @@
 								{% if file.id == post.id and file.rm == 0 %}
 									<br />File: <a href="{{url}}{{board.name}}/src/{{file.file}}{{file.type}}">{{file.file}}</a> - ({{ '%.0f' | format(file.size/1024) }} KB, {{file.original}}{{file.type}})<br />
 										<span id="post_thumb{{post.id}}">
-												<img src="{{url}}{{board.name}}/thumb/{{file.file}}s{{file.type}}">
+												<a href="{{url}}{{board.name}}/src/{{file.file}}{{file.type}}"><img src="{{url}}{{board.name}}/thumb/{{file.file}}s{{file.type}}"></a>
 										</span>
 								{% elseif file.id == post.id and file.rm == 1 %}
 									<div class="nothumb">
