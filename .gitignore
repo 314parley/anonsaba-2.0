@@ -1,0 +1,7 @@
+# Ignore my boards, .DS_Store, .installed, the template cache and config file.
+/b/
+.DS_Store
+.installed
+/pages_cache/
+#config file is ignored, <git update-index --assume-unchanged config/config.php>
+#config/config.php
